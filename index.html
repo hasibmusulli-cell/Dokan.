@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="bn"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f2a5c">
+<title>হিসাব খাতা</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
+</head><body>
+
+<section id="loading" class="splash"><div class="spin"></div></section>
+
+<section id="customerView" class="slipwrap" hidden>
+  <div class="slip">
+    <p class="slip-top">বাকির হিসাব</p>
+    <p id="cName" class="slip-name"></p>
+    <p class="slip-label">আপনার নিকট পাওনা</p>
+    <p id="cDue" class="slip-due">…</p>
+    <p id="cNote" class="slip-note"></p>
+  </div>
+</section>
+
+<section id="login" class="loginwrap" hidden>
+  <div class="brand"><h1>হিসাব খাতা</h1><p>কার কাছে কত পাই, আজ কত বিক্রি, সব এক জায়গায়।</p></div>
+  <div class="loginbox">
+    <h2>অ্যাডমিন লগইন</h2>
+    <label>ইমেইল<input id="email" type="email" autocomplete="username" inputmode="email"></label>
+    <label>পাসওয়ার্ড<span class="pw"><input id="pass" type="password" autocomplete="current-password"><button type="button" id="eye" class="ghost sm">দেখুন</button></span></label>
+    <button id="loginBtn" class="primary">লগইন করুন</button>
+    <p id="loginErr" class="err" role="alert"></p>
+  </div>
+</section>
+
+<main id="admin" hidden>
+  <header class="top"><div><h1>হিসাব খাতা</h1><p id="todayLbl" class="muted"></p></div><button class="ghost sm" id="logout">লগআউট</button></header>
+
+  <div class="hero"><p>মোট পাওনা</p><b id="tDue">০ ৳</b></div>
+  <div class="trio">
+    <div><p>আজ বিক্রি</p><b id="tSales">০ ৳</b></div>
+    <div><p>আজ লাভ</p><b id="tProfit">০ ৳</b></div>
+    <div><p>মাল কেনা</p><b id="tBuy">০ ৳</b></div>
+  </div>
+
+  <details class="panel"><summary>আজকের হিসাব লিখুন</summary>
+    <label>আজ কত টাকা বিক্রি<input id="dSales" type="number" inputmode="decimal"></label>
+    <label>কত টাকা লাভ<input id="dProfit" type="number" inputmode="decimal"></label>
+    <label>কত টাকার মাল কিনলাম<input id="dBuy" type="number" inputmode="decimal"></label>
+    <button id="saveDaily" class="primary">সেভ করুন</button>
+  </details>
+
+  <div class="listhead"><h2>কাস্টমার</h2><button id="openAdd" class="primary sm">নতুন কাস্টমার</button></div>
+  <input id="search" type="search" placeholder="নাম বা ফোন দিয়ে খুঁজুন">
+  <div id="list"></div>
+</main>
+
+<div id="sheet" class="sheet" hidden>
+  <div class="sheet-box">
+    <h3 id="sheetTitle"></h3>
+    <div id="sheetBody"></div>
+    <button class="ghost" id="sheetClose">বন্ধ করুন</button>
+  </div>
+</div>
+<div id="toast" role="status"></div>
+<script src="app.js"></script>
+</body></html>
