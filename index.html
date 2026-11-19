@@ -38,11 +38,30 @@
   <header class="top"><div><h1>হিসাব খাতা</h1><p id="todayLbl" class="muted"></p></div><button class="ghost sm" id="logout">লগআউট</button></header>
 
   <div class="hero"><p>মোট পাওনা</p><b id="tDue">০ ৳</b></div>
+
   <div class="trio">
     <div><p>আজ বিক্রি</p><b id="tSales">০ ৳</b></div>
     <div><p>আজ লাভ</p><b id="tProfit">০ ৳</b></div>
     <div><p>মাল কেনা</p><b id="tBuy">০ ৳</b></div>
   </div>
+
+  <!-- আলাদা সেকশন: মাল কেনা ও লাভের হিসাব -->
+  <section class="trade-sec">
+    <div class="sec-head">
+      <h2>মাল কেনা ও লাভের হিসাব</h2>
+      <span class="muted">আজকের সারসংক্ষেপ</span>
+    </div>
+    <div class="trade-grid">
+      <div class="trade-card buy-box">
+        <p>আজকের মাল কেনা</p>
+        <b id="secBuy">০ ৳</b>
+      </div>
+      <div class="trade-card profit-box">
+        <p>আজকের লাভ</p>
+        <b id="secProfit">০ ৳</b>
+      </div>
+    </div>
+  </section>
 
   <details class="panel"><summary>আজকের হিসাব লিখুন</summary>
     <label>আজ কত টাকা বিক্রি<input id="dSales" type="number" inputmode="decimal"></label>
