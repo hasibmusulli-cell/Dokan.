@@ -26,6 +26,7 @@ button:active{transform:scale(.98)}
 /* customer slip */
 .slipwrap{min-height:100vh;display:grid;place-items:center;padding:20px}
 .slip{width:100%;max-width:380px;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:28px 24px 34px;text-align:center;border-top:6px solid var(--navy);box-shadow:0 12px 32px rgba(20,30,70,.12)}
+.slip-owner{font-size:16px;font-weight:700;color:var(--navy);letter-spacing:.5px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
 .slip-top{color:var(--mut);font-size:14px}.slip-name{font-size:24px;font-weight:700;margin:6px 0 22px}
 .slip-label{color:var(--mut)}.slip-due{font-size:58px;font-weight:700;color:var(--due);line-height:1.15;margin:4px 0;font-variant-numeric:tabular-nums}
 .slip-note{color:var(--mut);font-size:14px;margin-top:16px}
