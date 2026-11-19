@@ -49,7 +49,11 @@ async function loadAdmin(){
   (l.data||[]).forEach(x=>DUE[x.customer_id]=(DUE[x.customer_id]||0)+Number(x.amount));
   $("tDue").textContent = bn(Object.values(DUE).reduce((a,b)=>a+b,0));
   const dd = d.data;
-  $("tSales").textContent = bn(dd?.sales); $("tProfit").textContent = bn(dd?.profit); $("tBuy").textContent = bn(dd?.purchase);
+  $("tSales").textContent = bn(dd?.sales);
+  $("tProfit").textContent = bn(dd?.profit);
+  $("tBuy").textContent = bn(dd?.purchase);
+  if($("secProfit")) $("secProfit").textContent = bn(dd?.profit);
+  if($("secBuy")) $("secBuy").textContent = bn(dd?.purchase);
   $("dSales").value = dd?.sales ?? ""; $("dProfit").value = dd?.profit ?? ""; $("dBuy").value = dd?.purchase ?? "";
   renderList();
 }
@@ -64,6 +68,8 @@ function renderList(){
     <div class="acts"><button class="b-add" data-a="add" data-id="${c.id}">+ বাকি</button>
     <button class="b-pay" data-a="pay" data-id="${c.id}">− জমা</button>
     <button class="b-wa" data-a="wa" data-id="${c.id}">WhatsApp</button>
+    <button class="b-msg" data-a="msg" data-id="${c.id}">মেসেজ</button>
+    <button class="b-mail" data-a="mail" data-id="${c.id}">ইমেইল</button>
     <button data-a="hist" data-id="${c.id}">ইতিহাস</button>
     <button class="ghost" data-a="link" data-id="${c.id}">লিংক</button>
     <button class="ghost" data-a="edit" data-id="${c.id}">এডিট</button>
@@ -78,6 +84,8 @@ $("list").onclick = e=>{
     add:()=>txSheet(c,1),
     pay:()=>txSheet(c,-1),
     wa:()=>sendWA(c),
+    msg:()=>sendDirectMsg(c),
+    mail:()=>sendDirectEmail(c),
     hist:()=>histSheet(c),
     link:()=>copyLink(c),
     edit:()=>editSheet(c),
@@ -85,7 +93,6 @@ $("list").onclick = e=>{
   })[b.dataset.a]();
 };
 
-/* bottom sheet */
 function openSheet(title,html){ $("sheetTitle").textContent=title; $("sheetBody").innerHTML=html; $("sheet").hidden=false; }
 function closeSheet(){ $("sheet").hidden=true; }
 $("sheetClose").onclick = closeSheet;
@@ -105,7 +112,6 @@ $("openAdd").onclick = ()=>{
   };
 };
 
-/* কাস্টমার এডিট ও ডিলিট */
 function editSheet(c){
   openSheet("কাস্টমার তথ্য এডিট",`<label>নাম<input id="eName" value="${esc(c.name)}"></label>
     <label>ফোন (WhatsApp নম্বর)<input id="ePhone" type="tel" inputmode="tel" value="${esc(c.phone||"")}"></label>
@@ -156,14 +162,34 @@ async function histSheet(c){
     : "<p class='empty'>এখনো কোনো লেনদেন নেই।</p>";
 }
 
-/* WhatsApp, লিংক, ইমেইল */
+/* WhatsApp, ডাইরেক্ট মেসেজ (SMS), ইমেইল ও লিংক */
 const linkFor = c => location.origin+location.pathname+"?c="+c.token;
+const dueMsg = c => `আসসালামু আলাইকুম ${c.name}, আপনার নিকট আমার পাওনা ${Number(DUE[c.id]||0)} টাকা। বিস্তারিত দেখুন: ${linkFor(c)}`;
+
 function sendWA(c){
   let p = (c.phone||"").replace(/\D/g,""); if(p.startsWith("0")) p = "88"+p;
   if(!p) return toast("এই কাস্টমারের ফোন নম্বর নেই");
-  const msg = `আসসালামু আলাইকুম ${c.name}, আপনার নিকট আমার পাওনা ${Number(DUE[c.id]||0)} টাকা। বিস্তারিত দেখুন: ${linkFor(c)}`;
-  window.open("https://wa.me/"+p+"?text="+encodeURIComponent(msg),"_blank");
+  window.open("https://wa.me/"+p+"?text="+encodeURIComponent(dueMsg(c)),"_blank");
 }
+
+function sendDirectMsg(c){
+  const p = (c.phone||"").replace(/\D/g,"");
+  const text = dueMsg(c);
+  if(navigator.share){
+    navigator.share({title:"বাকির হিসাব",text,url:linkFor(c)}).catch(()=>{});
+    return;
+  }
+  if(!p) return toast("এই কাস্টমারের ফোন নম্বর নেই");
+  window.location.href = "sms:"+p+"?body="+encodeURIComponent(text);
+}
+
+function sendDirectEmail(c){
+  if(!c.email) return toast("এই কাস্টমারের ইমেইল নেই");
+  const sub = encodeURIComponent("আপনার বাকির হিসাব");
+  const body = encodeURIComponent(dueMsg(c));
+  window.location.href = `mailto:${encodeURIComponent(c.email)}?subject=${sub}&body=${body}`;
+}
+
 function copyLink(c){
   const url = linkFor(c);
   (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(()=>toast("লিংক কপি হয়েছে")).catch(()=>prompt("লিংকটি কপি করুন:",url));
