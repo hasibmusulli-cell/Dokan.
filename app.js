@@ -65,14 +65,24 @@ function renderList(){
     <button class="b-pay" data-a="pay" data-id="${c.id}">− জমা</button>
     <button class="b-wa" data-a="wa" data-id="${c.id}">WhatsApp</button>
     <button data-a="hist" data-id="${c.id}">ইতিহাস</button>
-    <button class="ghost" data-a="link" data-id="${c.id}">লিংক</button></div></div>`}).join("")
+    <button class="ghost" data-a="link" data-id="${c.id}">লিংক</button>
+    <button class="ghost" data-a="edit" data-id="${c.id}">এডিট</button>
+    <button class="ghost" data-a="del" data-id="${c.id}" style="color:#ff6b6b">ডিলিট</button></div></div>`}).join("")
     : `<p class="empty">${CUST.length?"কাউকে পাওয়া যায়নি":"এখনো কোনো কাস্টমার নেই। উপরের বাটন চেপে প্রথম কাস্টমার যোগ করুন।"}</p>`;
 }
 $("search").oninput = renderList;
 $("list").onclick = e=>{
   const b = e.target.closest("button"); if(!b) return;
   const c = CUST.find(x=>x.id===b.dataset.id); if(!c) return;
-  ({add:()=>txSheet(c,1),pay:()=>txSheet(c,-1),wa:()=>sendWA(c),hist:()=>histSheet(c),link:()=>copyLink(c)})[b.dataset.a]();
+  ({
+    add:()=>txSheet(c,1),
+    pay:()=>txSheet(c,-1),
+    wa:()=>sendWA(c),
+    hist:()=>histSheet(c),
+    link:()=>copyLink(c),
+    edit:()=>editSheet(c),
+    del:()=>deleteCustomer(c)
+  })[b.dataset.a]();
 };
 
 /* bottom sheet */
@@ -94,6 +104,34 @@ $("openAdd").onclick = ()=>{
     closeSheet(); toast("কাস্টমার যোগ হয়েছে"); loadAdmin();
   };
 };
+
+/* কাস্টমার এডিট ও ডিলিট */
+function editSheet(c){
+  openSheet("কাস্টমার তথ্য এডিট",`<label>নাম<input id="eName" value="${esc(c.name)}"></label>
+    <label>ফোন (WhatsApp নম্বর)<input id="ePhone" type="tel" inputmode="tel" value="${esc(c.phone||"")}"></label>
+    <label>ইমেইল<input id="eEmail" type="email" inputmode="email" value="${esc(c.email||"")}"></label>
+    <button class="primary" id="eSave">আপডেট করুন</button>`);
+  $("eSave").onclick = async()=>{
+    const name = $("eName").value.trim(); if(!name) return toast("নাম লিখুন");
+    $("eSave").disabled = true;
+    const {error} = await db.from("customers").update({
+      name,
+      phone:$("ePhone").value.trim(),
+      email:$("eEmail").value.trim()
+    }).eq("id",c.id);
+    if(error){ $("eSave").disabled=false; return toast("আপডেট হয়নি, আবার চেষ্টা করুন"); }
+    closeSheet(); toast("তথ্য আপডেট হয়েছে"); loadAdmin();
+  };
+}
+
+async function deleteCustomer(c){
+  if(!confirm(`"${c.name}" এর প্রোফাইল ও হিসাব কি স্থায়ীভাবে ডিলিট করতে চান?`)) return;
+  await db.from("ledger").delete().eq("customer_id",c.id);
+  const {error} = await db.from("customers").delete().eq("id",c.id);
+  if(error) return toast("ডিলিট করা যায়নি (Supabase Delete পলিসি চেক করুন)");
+  toast("কাস্টমার ডিলিট হয়েছে");
+  loadAdmin();
+}
 
 function txSheet(c,sign){
   openSheet(`${c.name} — ${sign>0?"বাকি লিখুন":"জমা নিন"}`,`<label>কত টাকা<input id="tAmt" type="number" inputmode="decimal" min="1"></label>
@@ -144,5 +182,9 @@ $("saveDaily").onclick = async()=>{
   if(error) return toast("সেভ হয়নি, আবার চেষ্টা করুন");
   toast("আজকের হিসাব সেভ হয়েছে"); document.querySelector(".panel").open=false; loadAdmin();
 };
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+}
 
 init();
