@@ -15,7 +15,6 @@ button.primary.sm{width:auto;margin:0}.sm{padding:8px 14px;font-size:14px}
 button.ghost{background:transparent;color:var(--mut)}
 button:active{transform:scale(.98)}
 
-/* login */
 .loginwrap{min-height:100vh;display:flex;flex-direction:column}
 .brand{background:var(--navy);color:#fff;padding:56px 24px 64px;background-image:repeating-linear-gradient(0deg,transparent 0 31px,rgba(255,255,255,.08) 31px 32px)}
 .brand h1{font-size:38px;font-weight:700;letter-spacing:-.5px}.brand p{margin-top:8px;opacity:.85;max-width:280px}
@@ -23,7 +22,6 @@ button:active{transform:scale(.98)}
 .loginbox h2{font-size:20px}
 .pw{display:flex;gap:8px;align-items:center}.pw input{margin-top:5px}.pw button{margin-top:5px;white-space:nowrap}
 
-/* customer slip */
 .slipwrap{min-height:100vh;display:grid;place-items:center;padding:20px}
 .slip{width:100%;max-width:380px;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:28px 24px 34px;text-align:center;border-top:6px solid var(--navy);box-shadow:0 12px 32px rgba(20,30,70,.12)}
 .slip-owner{font-size:16px;font-weight:700;color:var(--navy);letter-spacing:.5px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
@@ -31,13 +29,26 @@ button:active{transform:scale(.98)}
 .slip-label{color:var(--mut)}.slip-due{font-size:58px;font-weight:700;color:var(--due);line-height:1.15;margin:4px 0;font-variant-numeric:tabular-nums}
 .slip-note{color:var(--mut);font-size:14px;margin-top:16px}
 
-/* admin */
 main{max-width:600px;margin:auto;padding:16px 16px 40px}
 .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.top h1{font-size:24px;font-weight:700}
 .hero{background:var(--navy);color:#fff;border-radius:18px;padding:20px 22px}.hero p{opacity:.8;font-size:15px}.hero b{font-size:40px;font-weight:700;display:block;line-height:1.2}
 .trio{display:grid;grid-template-columns:repeat(3,1fr);margin:12px 0;background:var(--card);border:1px solid var(--line);border-radius:16px}
 .trio div{padding:12px 8px;text-align:center}.trio div+div{border-left:1px solid var(--line)}
 .trio p{font-size:13px;color:var(--mut)}.trio b{font-size:18px;font-variant-numeric:tabular-nums}
+
+/* আলাদা সেকশন: মাল কেনা ও লাভের হিসাব */
+.trade-sec{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:12px}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.sec-head h2{font-size:17px;font-weight:600}
+.trade-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.trade-card{border-radius:14px;padding:12px 14px;border:1px solid var(--line)}
+.trade-card p{font-size:13px;color:var(--mut)}
+.trade-card b{font-size:21px;display:block;margin-top:4px;font-variant-numeric:tabular-nums}
+.buy-box{background:var(--duebg)}
+.buy-box b{color:var(--due)}
+.profit-box{background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.profit-box b{color:var(--ok)}
+
 .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:0 16px;margin-bottom:18px}
 .panel summary{padding:14px 0;font-weight:600;cursor:pointer}.panel[open]{padding-bottom:16px}
 .listhead{display:flex;justify-content:space-between;align-items:center;margin:8px 0 10px}.listhead h2{font-size:19px}
@@ -48,9 +59,10 @@ main{max-width:600px;margin:auto;padding:16px 16px 40px}
 .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.acts button{padding:9px 13px;font-size:14px}
 .b-add{background:var(--duebg);color:var(--due);border-color:transparent}.b-pay{background:color-mix(in srgb,var(--ok) 15%,var(--card));color:var(--ok);border-color:transparent}
 .b-wa{background:#25d366;color:#08331b;border-color:transparent}
+.b-msg{background:color-mix(in srgb,var(--navy) 15%,var(--card));color:var(--ink);border-color:transparent}
+.b-mail{background:color-mix(in srgb,var(--mut) 16%,var(--card));color:var(--ink);border-color:transparent}
 .empty{text-align:center;color:var(--mut);padding:30px 10px}
 
-/* sheet */
 .sheet{position:fixed;inset:0;background:rgba(10,14,35,.55);display:flex;align-items:flex-end;justify-content:center;z-index:20}
 .sheet-box{background:var(--card);width:100%;max-width:600px;border-radius:22px 22px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));max-height:85vh;overflow:auto;animation:up .22s ease-out}
 @keyframes up{from{transform:translateY(30px);opacity:0}}
